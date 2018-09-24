@@ -55,8 +55,8 @@ class Particle:
                 self.position_i[i] = bounds[i][0]
 
 
-num_particles = 150
-max = 50
+num_particles = 10
+max = 10
 swarm = []
 iterations = np.empty((max, num_particles), dtype=Particle)
 
@@ -127,5 +127,5 @@ def update(frame_number):
 
 
 anim = animation.FuncAnimation(fig, update, interval=1, frames=max)
-anim.save('particle-swarm-optimization.gif', writer='imagemagick', fps=1)
+anim.save('particle-swarm-optimization-particles.gif', writer='imagemagick', fps=1)
 # plt.show()
