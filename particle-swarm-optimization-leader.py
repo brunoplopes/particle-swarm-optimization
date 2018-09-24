@@ -73,14 +73,18 @@ class PSO():
         global num_dimensions
 
         num_dimensions = 2
+        leader_position = [-2, -2]
         err_best_g = -1  # best error for group
-        pos_best_g = []  # best position for group
+        pos_best_g = leader_position
 
         # establish the swarm
         for i in range(0, num_particles):
             swarm.append(Particle())
 
-        # begin optimization loop
+        leader = Particle()
+        leader.position_i = leader_position
+        swarm[0] = leader
+
         i = 0
         while i < maxiter:
             # print i,err_best_g
@@ -90,7 +94,7 @@ class PSO():
 
                 # determine if current particle is the best (globally)
                 if swarm[j].err_i < err_best_g or err_best_g == -1:
-                    pos_best_g = list(swarm[j].position_i)
+                    pos_best_g = list(leader.position_i)
                     err_best_g = float(swarm[j].err_i)
 
             # cycle through swarm and update velocities and position
@@ -127,5 +131,5 @@ def update(frame_number):
 
 
 anim = animation.FuncAnimation(fig, update, interval=1, frames=max)
-anim.save('animation.gif', writer='imagemagick', fps=1)
+anim.save('test-leader-animation.gif', writer='imagemagick', fps=1)
 # plt.show()
