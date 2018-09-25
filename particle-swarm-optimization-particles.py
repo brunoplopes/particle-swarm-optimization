@@ -59,6 +59,7 @@ num_particles = 10
 max = 10
 swarm = []
 iterations = np.empty((max, num_particles), dtype=Particle)
+cost_history = []
 
 
 def func1(x):
@@ -92,6 +93,7 @@ class PSO():
                 if swarm[j].err_i < err_best_g or err_best_g == -1:
                     pos_best_g = list(swarm[j].position_i)
                     err_best_g = float(swarm[j].err_i)
+                    cost_history.append(err_best_g)
 
             # cycle through swarm and update velocities and position
             for j in range(0, num_particles):
@@ -128,4 +130,12 @@ def update(frame_number):
 
 anim = animation.FuncAnimation(fig, update, interval=1, frames=max)
 anim.save('particle-swarm-optimization-particles.gif', writer='imagemagick', fps=1)
+
 # plt.show()
+
+fig2, ax2 = plt.subplots()
+ax2.plot(cost_history)
+print(cost_history)
+plt.ylabel('Custo')
+plt.xlabel('Iterações')
+plt.show()

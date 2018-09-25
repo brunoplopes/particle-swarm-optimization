@@ -29,9 +29,9 @@ class Particle:
 
     # update new particle velocity
     def update_velocity(self, pos_best_g):
-        w = 0.5  # constant inertia weight (how much to weigh the previous velocity)
+        w = .75  # constant inertia weight (how much to weigh the previous velocity)
         c1 = 1  # cognative constant
-        c2 = 2  # social constant
+        c2 = 1  # social constant
 
         for i in range(0, num_dimensions):
             r1 = random.random()
@@ -74,14 +74,18 @@ class PSO():
         global num_dimensions
 
         num_dimensions = 2
+        leader_position = [-2, -2]
         err_best_g = -1  # best error for group
-        pos_best_g = []  # best position for group
+        pos_best_g = leader_position
 
         # establish the swarm
         for i in range(0, num_particles):
             swarm.append(Particle())
 
-        # begin optimization loop
+        leader = Particle()
+        leader.position_i = leader_position
+        swarm[0] = leader
+
         i = 0
         while i < maxiter:
             # print i,err_best_g
@@ -90,8 +94,10 @@ class PSO():
                 swarm[j].evaluate(costFunc)
 
                 # determine if current particle is the best (globally)
-                if swarm[j].err_i < err_best_g or err_best_g == -1:
-                    pos_best_g = list(swarm[j].position_i)
+                if swarm[j].err_i < err_best_g or err_best_g == -1 or i == 0:
+                    if i == 0:
+                        swarm[i].position_i = [random.uniform(-5, 5), random.uniform(-5, 5)]
+                    pos_best_g = list(leader.position_i)
                     err_best_g = float(swarm[j].err_i)
                     cost_history.append(err_best_g)
 
@@ -113,7 +119,7 @@ PSO(func1, bounds, num_particles, max)
 
 
 fig = plt.figure(figsize=(7, 7))
-ax = plt.axes(xlim=(-5, 5), ylim=(-5, 5))
+ax = plt.axes(xlim=(-10, 10), ylim=(-10, 10))
 scatter = ax.scatter(0, num_particles)
 
 
@@ -129,7 +135,7 @@ def update(frame_number):
 
 
 anim = animation.FuncAnimation(fig, update, interval=1, frames=max)
-anim.save('particle-swarm-optimization.gif', writer='imagemagick', fps=1)
+anim.save('test-leader-animation-leader-moving.gif', writer='imagemagick', fps=1)
 # plt.show()
 
 fig2, ax2 = plt.subplots()
